@@ -60,9 +60,12 @@ var WMSLayer = function( options )
 	url += "&srs=";
 	url += options.hasOwnProperty('srs') ? options['srs'] : 'EPSG:4326';
 	url += "&layers=" + options['layers'];
+	// CHANGE: Add 'styles' attribute in any case, even if no styles are given.
+	// This fixes the connection to MapProxy's WMS service (www.mapproxy.org).
+	url += "&styles="
 	if ( options.hasOwnProperty('styles') )
 	{
-		url += "&styles=" + options.styles;
+		url += options.styles;
 	}
 	url += "&format=";
 	url += options.hasOwnProperty('format') ? options['format'] : 'image/jpeg';
