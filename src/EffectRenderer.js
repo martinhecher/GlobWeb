@@ -90,6 +90,7 @@ function(CoordinateSystem, VectorRendererManager, FeatureStyle, Program) {
 	uniform vec3 poiPosition; // world position \n\
 	uniform vec2 poiScale; // x,y scale \n\
 	uniform vec2 tst; \n\
+	uniform float time; \n\
 	\n\
 	varying vec2 texCoord; \n\
 	\n\
@@ -103,6 +104,7 @@ function(CoordinateSystem, VectorRendererManager, FeatureStyle, Program) {
 		// Compute poi position in clip coordinate \n\
 		gl_Position = viewProjectionMatrix * vec4(poiPosition, 1.0); \n\
 		gl_Position.xy += vertex.xy * gl_Position.w * poiScale; \n\
+		gl_Position.x += time * 0.1;\n\
 	} \n\
 	";
 
@@ -112,11 +114,13 @@ function(CoordinateSystem, VectorRendererManager, FeatureStyle, Program) {
 	uniform sampler2D texture; \n\
 	uniform float alpha; \n\
 	uniform vec3 color; \n\
+	uniform float time; \n\
 	\n\
 	void main(void) \n\
 	{ \n\
 		vec4 textureColor = texture2D(texture, texCoord); \n\
 		gl_FragColor = vec4(textureColor.rgb * color, textureColor.a * alpha); \n\
+		gl_FragColor.rgb += time;\n\
 		if (gl_FragColor.a <= 0.0) discard; \n\
 	} \n\
 	";
@@ -265,9 +269,19 @@ function(CoordinateSystem, VectorRendererManager, FeatureStyle, Program) {
 
 	/**************************************************************************************************************/
 
-	/*
-	Render all the POIs
- */
+	/**
+	 *	Update internal timer and register update:
+	 */
+	EffectRenderer.prototype.update = function(time) {
+		this.time = time;
+		this.renderContext.requestFrame();
+	};
+
+	/**************************************************************************************************************/
+
+	/**
+	 *	Render all the POIs
+	 */
 	EffectRenderer.prototype.render = function() {
 		if (this.buckets.length == 0) {
 			return;
@@ -286,6 +300,10 @@ function(CoordinateSystem, VectorRendererManager, FeatureStyle, Program) {
 
 		// Setup program
 		this.program.apply();
+
+		var val = 0.7 / 1.4 * this.time;
+		console.log("asdf: " + val);
+		gl.uniform1f(this.program.uniforms["time"], val);
 
 		// The shader only needs the viewProjection matrix, use modelViewMatrix as a temporary storage
 		mat4.multiply(renderContext.projectionMatrix, renderContext.viewMatrix, renderContext.modelViewMatrix)
