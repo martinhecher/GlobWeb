@@ -20,7 +20,7 @@
 define( ["./Globe", "./GeoBound",
 		"./WMSLayer", "./WMTSLayer", "./WCSElevationLayer", "./OSMLayer", "./BingLayer", "./VectorLayer", "./AtmosphereLayer", // Layers
 		"./Navigation", "./FeatureStyle", "./Stats", "./KMLParser", // Others
-		"./PointRenderer", "./LineStringRenderable", "./PolygonRenderer" ], // Renderers
+		"./PointRenderer", "./LineStringRenderable", "./PolygonRenderer", "./EffectRenderer" ], // Renderers
 	function(Globe, GeoBound, WMSLayer, WMTSLayer, WCSElevationLayer, OSMLayer, BingLayer, VectorLayer, AtmosphereLayer, Navigation, FeatureStyle, Stats, KMLParser) {
 
 // Declare GlobWeb 

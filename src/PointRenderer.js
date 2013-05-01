@@ -382,7 +382,7 @@ PointRenderer.prototype.render = function()
 // Register the renderer
 VectorRendererManager.registerRenderer({
 										creator: function(globe) { return new PointRenderer(globe.tileManager); },
-										canApply: function(type,style) {return type == "Point"; }
+										canApply: function(type,style) { return type == "Point" && !style.renderer; }
 									});
 									
 return PointRenderer;
